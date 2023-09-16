@@ -1,8 +1,6 @@
 package com.example.todox.di;
 
-import com.example.todox.data.remote.api.ApiInterface;
 import com.example.todox.data.repository.LoginRepositoryImpl;
-import com.example.todox.domain.mapper.AuthTokenMapper;
 import com.example.todox.domain.repository.LoginRepository;
 
 import java.util.concurrent.ExecutorService;
@@ -27,7 +25,9 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    public LoginRepository provideLoginRepository(ApiInterface apiInterface, AuthTokenMapper authTokenMapper, ExecutorService executorService) {
-        return new LoginRepositoryImpl(apiInterface, authTokenMapper, executorService);
+    public LoginRepository provideLoginRepository(LoginRepositoryImpl loginRepositoryImpl) {
+
+
+        return loginRepositoryImpl;
     }
 }

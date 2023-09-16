@@ -1,17 +1,16 @@
 package com.example.todox.data.repository;
 
+import com.example.todox.data.mapper.AuthTokenMapperImpl;
 import com.example.todox.data.remote.api.ApiInterface;
 import com.example.todox.data.remote.dto.LoginRequest;
 import com.example.todox.data.remote.dto.LoginResponse;
 import com.example.todox.domain.entity.AuthToken;
-import com.example.todox.domain.mapper.AuthTokenMapper;
+import com.example.todox.domain.mapper.AuthTokenMapperI;
 import com.example.todox.domain.repository.LoginRepository;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 
@@ -19,13 +18,13 @@ import retrofit2.Response;
 
 public class LoginRepositoryImpl implements LoginRepository {
     private final ApiInterface apiInterface;
-    private final AuthTokenMapper authTokenMapper;
+    private final AuthTokenMapperI authTokenMapperI;
     private final ExecutorService executorService;
 
     @Inject
-    public LoginRepositoryImpl(ApiInterface apiInterface, AuthTokenMapper authTokenMapper, ExecutorService executorService) {
+    public LoginRepositoryImpl(ApiInterface apiInterface, AuthTokenMapperI authTokenMapperI, ExecutorService executorService) {
         this.apiInterface = apiInterface;
-        this.authTokenMapper = authTokenMapper;
+        this.authTokenMapperI = authTokenMapperI;
         this.executorService = executorService;
     }
 
@@ -41,7 +40,7 @@ public class LoginRepositoryImpl implements LoginRepository {
             try {
                 Response<LoginResponse> response = apiInterface.loginUser(request).execute();
                 if (response.isSuccessful()) {
-                    return authTokenMapper.mapToDomain(response.body());
+                    return authTokenMapperI.mapToDomain(response.body());
                 } else {
                     // Handle error and throw an exception
                     throw new IllegalStateException("Login failed: " + response.errorBody());
